@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Base properties -->
+  <xacro:property name="base_length" value="0.501" />
+  <xacro:property name="base_width" value="0.324" />
+  <xacro:property name="base_height" value="0.406" />
+  <xacro:property name="base_mass" value="10" />
+  <xacro:property name="wheel_radius" value="0.10" />
+
+  <!-- Torso properties -->
+  <xacro:property name="torso_length" value="0.370" />
+  <xacro:property name="torso_width" value="0.275" />
+  <xacro:property name="torso_height" value="0.576" />
+  <xacro:property name="torso_mass" value="10" />
+
+  <!-- Elevator properties -->
+  <xacro:property name="elevator_length" value="0.02" />
+
+  <xacro:macro name="base">
+    <link name="base_footprint"/>
+    
+    <link name="base_link">
+      <visual>
+        <origin xyz="${-base_length/2} ${-base_width/2} ${-base_height/2}" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find vera_description)/meshes/structure/base.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="yellow">
+          <color rgba="0.8784 0.6627 0.6627 1.0"/>
+        </material>
+      </visual>
+      
+      <collision>
+        <origin xyz="${-base_length/2} ${-base_width/2} ${-base_height/2}" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find vera_description)/meshes/structure/base.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${base_mass}"/>
+        <inertia ixx="${(1/12) * base_mass * ((base_width  * base_width)  + (base_height * base_height))}" ixy="0.0" ixz="0.0"
+                 iyy="${(1/12) * base_mass * ((base_length * base_length) + (base_height * base_height))}" iyz="0.0"
+                 izz="${(1/12) * base_mass * ((base_length * base_length) + (base_width  * base_width))}"/>
+      </inertial>
+    </link>
+
+    <gazebo reference="base_link">  
+      <visual>  
+        <material>
+          <ambient>0.8392 0.6314 0.0 1.0</ambient>  
+          <diffuse>0.8392 0.6314 0.0 1.0</diffuse>  
+          <specular>0.99 0.99 0.99 1.0</specular>  
+          <emissive>0.0 0.0 0.0 0.0</emissive>  
+        </material>
+      </visual> 
+    </gazebo>
+
+    <joint name="base_to_footprint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+      <origin xyz="0 0 ${wheel_radius + base_height/2}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="torso_link">
+    <link name="torso_link">
+      <visual>
+        <origin xyz="${-torso_length/2 - 0.01} 0 ${-torso_height/2}" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find vera_description)/meshes/structure/torso.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="yellow">
+          <color rgba="0.8784 0.6627 0.6627 1.0"/>
+        </material>
+      </visual>
+      
+      <collision>
+        <origin xyz="${-torso_length/2 - 0.01} 0 ${-torso_height/2}" rpy="1.57 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find vera_description)/meshes/structure/torso.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="${-torso_length/2 - 0.01} 0 ${-torso_height/2}" rpy="1.57 0 0"/>
+        <mass value="${torso_mass}"/>
+        <inertia ixx="${(1/12) * torso_mass * ((torso_width  * torso_width)  + (torso_height * torso_height))}" ixy="0.0" ixz="0.0"
+                  iyy="${(1/12) * torso_mass * ((torso_length * torso_length) + (torso_height * torso_height))}" iyz="0.0"
+                  izz="${(1/12) * torso_mass * ((torso_length * torso_length) + (torso_width  * torso_width))}"/>
+      </inertial>
+    </link>
+
+    <joint name="base_to_torso" type="fixed">
+      <parent link="base_link"/>
+      <child link="torso_link"/>
+      <origin xyz="${base_length/2 - torso_length/2} 0 ${base_height/2 + torso_height/2}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="elevator">
+    <link name="elevator_base_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${elevator_length} ${0.13} ${torso_height}"/>
+        </geometry>
+        <material name="yellow">
+          <color rgba="0.8784 0.6627 0.6627 1.0"/>
+        </material>
+      </visual>
+      
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${elevator_length} ${0.13} ${torso_height}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${torso_mass}"/>
+        <inertia ixx="${(1/12) * torso_mass * ((torso_width  * torso_width)  + (torso_height * torso_height))}" ixy="0.0" ixz="0.0"
+                  iyy="${(1/12) * torso_mass * ((elevator_length * elevator_length) + (torso_height * torso_height))}" iyz="0.0"
+                  izz="${(1/12) * torso_mass * ((elevator_length * elevator_length) + (torso_width  * torso_width))}"/>
+      </inertial>
+    </link>
+
+    <joint name="torso_to_elevator" type="fixed">
+      <parent link="torso_link"/>
+      <child link="elevator_base_link"/>
+      <origin xyz="${torso_length/2 + elevator_length/2 - 0.01} 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="elevator_part_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${0.01} ${0.13} ${0.13}"/>
+        </geometry>
+        <material name="yellow">
+          <color rgba="0.8784 0.6627 0.6627 1.0"/>
+        </material>
+      </visual>
+      
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${0.01} ${0.13} ${0.13}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${torso_mass}"/>
+        <inertia ixx="${(1/12) * torso_mass * ((torso_width  * torso_width)  + (torso_height * torso_height))}" ixy="0.0" ixz="0.0"
+                  iyy="${(1/12) * torso_mass * ((elevator_length * elevator_length) + (torso_height * torso_height))}" iyz="0.0"
+                  izz="${(1/12) * torso_mass * ((elevator_length * elevator_length) + (torso_width  * torso_width))}"/>
+      </inertial>
+    </link>
+
+    <joint name="elevator_part_to_elevator_base" type="prismatic">
+      <parent link="elevator_base_link"/>
+      <child link="elevator_part_link"/>
+      <origin xyz="${elevator_length/2 + 0.005} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${-torso_height/2 + 0.13/2}" upper="${torso_height/2 - 0.13/2}" effort="0.5" velocity="0.1"/>
+    </joint>
+  </xacro:macro>
+</robot>

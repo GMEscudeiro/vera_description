@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<robot name="vera" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find vera_description)/urdf/utils/mecanum_properties.urdf.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/mech/base.urdf.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/mech/mecanum_wheel.urdf.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/sensors/imu.urdf.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/sensors/generic_laser.urdf.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/sensors/depth_sensor.urdf.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/controllers/omni_drive.urdf.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/mech/manipulator.xml" />
+
+  <xacro:base/>
+
+  <xacro:mecanum_wheel 
+    side="front_left"
+    radius="${wheel_radius}" 
+    width="${wheel_width}" 
+    pos_x="${wheel_pos_x}" 
+    pos_y="${wheel_pos_y}" 
+    pos_z="${wheel_pos_z}" 
+    mass="${wheel_mass}"
+  />
+
+  <xacro:mecanum_wheel 
+    side="front_right"
+    radius="${wheel_radius}" 
+    width="${wheel_width}" 
+    pos_x="${wheel_pos_x}" 
+    pos_y="${-wheel_pos_y}" 
+    pos_z="${wheel_pos_z}" 
+    mass="${wheel_mass}"
+  />
+  <xacro:mecanum_wheel 
+    side="rear_left"
+    radius="${wheel_radius}" 
+    width="${wheel_width}" 
+    pos_x="${-wheel_pos_x}" 
+    pos_y="${wheel_pos_y}" 
+    pos_z="${wheel_pos_z}" 
+    mass="${wheel_mass}"
+  />
+
+  <xacro:mecanum_wheel 
+    side="rear_right"
+    radius="${wheel_radius}" 
+    width="${wheel_width}" 
+    pos_x="${-wheel_pos_x}" 
+    pos_y="${-wheel_pos_y}" 
+    pos_z="${wheel_pos_z}" 
+    mass="${wheel_mass}"
+  />
+
+  <xacro:torso_link/>
+  <xacro:elevator/>
+
+  <xacro:manipulator/>
+  <!-- <xacro:imu/>
+  
+  <xacro:generic_laser>
+    <xacro:insert_block name="laser_pose" />
+  </xacro:generic_laser>
+  
+  <xacro:depth_sensor>
+    <xacro:insert_block name="depth_sensor_pose" />
+  </xacro:depth_sensor>
+
+  <xacro:omni_drive_controller/> -->
+</robot>
