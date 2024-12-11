@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
     <xacro:include filename="$(find vera_description)/urdf/utils/manipulator_utils.xml" />
-    <xacro:include filename="$(find vera_description)/urdf/utils/manipulator_controllers.xml" />
+    <!-- <xacro:include filename="$(find vera_description)/urdf/utils/manipulator_controllers.xml" /> -->
 
     <!-- Manipulator properties -->
     <xacro:property name="support_length"   value="0.12" />
@@ -381,6 +381,6 @@
         <xacro:gripper_right_end_link/>
         <xacro:gripper_left_link/>
         <xacro:gripper_left_end_link/>
-        <xacro:manipulator_controllers/>
+        <!-- <xacro:manipulator_controllers/> -->
     </xacro:macro>
 </robot>

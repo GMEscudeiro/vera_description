@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="base_ros2_control" params="name">
+
+      <xacro:macro name="ros2_control_wheel_joint" params="side position">
+        <joint name="${position}_${side}_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+      </xacro:macro>
+
+      <xacro:if value="$(arg simulation)">
+        <ros2_control name="${name}" type="system">
+            <hardware>
+                <!-- By default, set up controllers for simulation. This won't work on real hardware -->
+                <plugin>mock_components/GenericSystem</plugin>
+            </hardware>
+            <xacro:ros2_control_wheel_joint side="left" position="front"/>
+            <xacro:ros2_control_wheel_joint side="right" position="front"/>
+            <xacro:ros2_control_wheel_joint side="left" position="rear"/>
+            <xacro:ros2_control_wheel_joint side="right" position="rear"/>
+        </ros2_control>
+      </xacro:if>
+
+      <xacro:unless value="$(arg simulation)">
+        <ros2_control name="${name}" type="system">
+            <hardware>
+                <plugin>hera_base_control/HeraBaseHardwareControl</plugin>
+                <param name = "wheel1_name">front_left_wheel_joint</param>
+                <param name = "wheel2_name">front_right_wheel_joint</param>
+                <param name = "wheel3_name">rear_left_wheel_joint</param>
+                <param name = "wheel4_name">rear_right_wheel_joint</param>
+                <param name = "loop_rate">50</param>
+                <param name = "device">/dev/base</param>
+                <param name = "baud_rate">57600</param>
+                <param name = "timeout_ms">1000</param>
+                <param name = "enc_pulses_per_rev">5</param>
+            </hardware>
+            <xacro:ros2_control_wheel_joint side="left" position="front"/>
+            <xacro:ros2_control_wheel_joint side="right" position="front"/>
+            <xacro:ros2_control_wheel_joint side="left" position="rear"/>
+            <xacro:ros2_control_wheel_joint side="right" position="rear"/>
+        </ros2_control>
+      </xacro:unless>
+    </xacro:macro>
+</robot>

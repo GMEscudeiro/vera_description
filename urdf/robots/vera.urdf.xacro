@@ -9,6 +9,8 @@
   <xacro:include filename="$(find vera_description)/urdf/sensors/depth_sensor.urdf.xacro" />
   <xacro:include filename="$(find vera_description)/urdf/controllers/omni_drive.urdf.xacro" />
   <xacro:include filename="$(find vera_description)/urdf/mech/manipulator.xml" />
+  <xacro:include filename="$(find vera_description)/urdf/utils/base.ros2_control.xacro" />
+  <xacro:include filename="$(find vera_description)/urdf/utils/manipulator.ros2_control.xacro" />
 
   <xacro:base/>
 
@@ -55,6 +57,15 @@
   <xacro:elevator/>
 
   <xacro:manipulator/>
+  <xacro:manipulator_ros2_control 
+    name="ManipulatorControl" 
+    initial_positions_file="$(find vera_moveit_config)/config/initial_positions.yaml"
+  />
+
+  <!-- <xacro:base_ros2_control 
+    name="BaseControl"
+  /> -->
+
   <!-- <xacro:imu/>
   
   <xacro:generic_laser>
@@ -66,4 +77,5 @@
   </xacro:depth_sensor>
 
   <xacro:omni_drive_controller/> -->
+  
 </robot>

@@ -15,7 +15,10 @@
   <xacro:property name="torso_mass" value="10" />
 
   <!-- Elevator properties -->
-  <xacro:property name="elevator_length" value="0.02" />
+  <xacro:property name="elevator_length" value="0.03" />
+  <xacro:property name="elevator_width" value="0.12" />
+  <xacro:property name="elevator_height" value="0.62" />
+  <xacro:property name="elevator_distance" value="0.04" />
 
   <xacro:macro name="base">
     <link name="base_footprint"/>
@@ -105,7 +108,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="${elevator_length} ${0.13} ${torso_height}"/>
+          <box size="${elevator_length} ${elevator_width} ${elevator_height}"/>
         </geometry>
         <material name="yellow">
           <color rgba="0.8784 0.6627 0.6627 1.0"/>
@@ -131,14 +134,14 @@
     <joint name="torso_to_elevator" type="fixed">
       <parent link="torso_link"/>
       <child link="elevator_base_link"/>
-      <origin xyz="${torso_length/2 + elevator_length/2 - 0.01} 0 0" rpy="0 0 0"/>
+      <origin xyz="${torso_length/2 + elevator_length/2 - 0.01} 0 ${-elevator_distance}" rpy="0 0 0"/>
     </joint>
 
     <link name="elevator_part_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="${0.01} ${0.13} ${0.13}"/>
+          <box size="${0.003} ${0.13} ${0.088}"/>
         </geometry>
         <material name="yellow">
           <color rgba="0.8784 0.6627 0.6627 1.0"/>
@@ -148,7 +151,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="${0.01} ${0.13} ${0.13}"/>
+          <box size="${0.003} ${0.13} ${0.088}"/>
         </geometry>
       </collision>
 
@@ -164,9 +167,9 @@
     <joint name="elevator_part_to_elevator_base" type="prismatic">
       <parent link="elevator_base_link"/>
       <child link="elevator_part_link"/>
-      <origin xyz="${elevator_length/2 + 0.005} 0 0" rpy="0 0 0"/>
+      <origin xyz="${elevator_length/2 + 0.00015} 0 0" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit lower="${-torso_height/2 + 0.13/2}" upper="${torso_height/2 - 0.13/2}" effort="0.5" velocity="0.1"/>
+      <limit lower="${-elevator_height/2 + 0.088/2 + 0.012}" upper="${elevator_height/2 - 0.088/2 - 0.012}" effort="0.5" velocity="0.1"/>
     </joint>
   </xacro:macro>
 </robot>
